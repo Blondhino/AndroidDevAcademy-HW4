@@ -14,13 +14,13 @@
             android:fontFamily="sans-serif-light"
             android:textSize="@dimen/TitleSize"
             android:layout_margin="@dimen/smallMargin"
-            android:text="@string/about_author"
+            android:text="@string/about_author_title"
             />
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/hello_it_s_me_mario_1"
+            android:text="@string/hello_it_s_me_mario"
             />
 </RelativeLayout>

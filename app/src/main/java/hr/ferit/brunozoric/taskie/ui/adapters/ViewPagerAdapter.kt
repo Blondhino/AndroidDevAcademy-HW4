@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import hr.ferit.brunozoric.taskie.ui.fragments.AboutAplicationFragment
-import hr.ferit.brunozoric.taskie.ui.fragments.AboutAuthorFragment
 
 class ViewPagerAdapter(manager :FragmentManager) : FragmentStatePagerAdapter(manager) {
 
@@ -15,7 +14,7 @@ class ViewPagerAdapter(manager :FragmentManager) : FragmentStatePagerAdapter(man
         const val PAGE_TWO_TITLE = "About Author"
     }
 
-    private val frags = mutableListOf<Fragment>(AboutAplicationFragment(),AboutAuthorFragment())
+    private val frags = mutableListOf<Fragment>(AboutAplicationFragment(),AboutAplicationFragment())
     private val titles = mutableListOf(PAGE_ONE_TITLE, PAGE_TWO_TITLE)
 
     override fun getItem(position: Int): Fragment {

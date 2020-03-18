@@ -20,11 +20,8 @@ import hr.ferit.brunozoric.taskie.ui.fragments.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_tasks.*
 
 class TasksFragment : BaseFragment(), AddTaskFragmentDialog.TaskAddedListener {
-    override fun onTaskAdded() {
-        refreshTasks()
-    }
 
-    private val repository = Repository()
+    private val repository = Repository
     private val adapter by lazy { TaskAdapter {onItemSelected(it)} }
 
     override fun getLayoutResourceId() = R.layout.fragment_tasks
@@ -52,7 +49,7 @@ class TasksFragment : BaseFragment(), AddTaskFragmentDialog.TaskAddedListener {
     private fun onItemSelected(task: Task){
         val detailsIntent = Intent(context, ContainerActivity::class.java).apply {
             putExtra(EXTRA_SCREEN_TYPE, ContainerActivity.SCREEN_TASK_DETAILS)
-            putExtra(EXTRA_TASK_ID, task.TaskDbId)
+            putExtra(EXTRA_TASK_ID, task.id)
         }
         startActivity(detailsIntent)
     }
@@ -74,7 +71,9 @@ class TasksFragment : BaseFragment(), AddTaskFragmentDialog.TaskAddedListener {
         dialog.show(childFragmentManager, dialog.tag)
     }
 
-
+    override fun onTaskAdded(task: Task) {
+        refreshTasks()
+    }
 
     companion object {
         fun newInstance(): Fragment {

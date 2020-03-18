@@ -1,39 +1,30 @@
 package hr.ferit.brunozoric.taskie.persistence
 
-import hr.ferit.brunozoric.taskie.Taskie
-import hr.ferit.brunozoric.taskie.db.DaoProvider
 import hr.ferit.brunozoric.taskie.model.Priority
 import hr.ferit.brunozoric.taskie.model.Task
 
-class Repository : RepoInterface{
+object Repository{
 
+    private val tasks = mutableListOf<Task>()
+    private var currentId = 0
 
-    private  var db : DaoProvider = DaoProvider.getInstance(Taskie.getAppContext())
-   private var taskieDao = db.taskieDao()
-
-    override fun getAllTasks(): MutableList<Task> {
-       return taskieDao.loadAll()
+    public fun save(title: String, description: String, priority: Priority): Task {
+        val task = Task(currentId, title, description, priority)
+        task.id = currentId
+        tasks.add(task)
+        currentId++
+        return task
     }
 
-    override fun removeAllTasks() {
-        taskieDao.deleteAllTasks()
+    fun deleteBy(id: Int){
+        tasks.removeAll { (it.id) == id }
     }
 
-    override fun removeTask(task: Task) {
-        taskieDao.deleteTask(task)
+    fun count() = tasks.size
+
+    fun get(id: Int): Task {
+        return tasks.first { it.id == id }
     }
 
-    override fun addTask(task: Task) {
-        taskieDao.insertTask(task)
-    }
-
-    override fun changeTask(task: Task) {
-        taskieDao.updateTask(task)
-    }
-
-    override fun getTaskBy(id: Long) : Task {
-        return taskieDao.getTask(id)
-    }
-
-
+    fun getAllTasks() = tasks
 }

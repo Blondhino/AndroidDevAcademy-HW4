@@ -2,32 +2,26 @@ package hr.ferit.brunozoric.taskie.ui.fragments
 
 import android.os.Bundle
 import android.text.TextUtils.isEmpty
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import hr.ferit.brunozoric.taskie.R
-import hr.ferit.brunozoric.taskie.Taskie
 import hr.ferit.brunozoric.taskie.common.displayToast
 import hr.ferit.brunozoric.taskie.model.Priority
 import hr.ferit.brunozoric.taskie.model.Task
 import hr.ferit.brunozoric.taskie.persistence.Repository
-import hr.ferit.brunozoric.taskie.persistence.TaskiePrefs
-import hr.ferit.brunozoric.taskie.persistence.TaskiePrefs.KEY
 import kotlinx.android.synthetic.main.fragment_dialog_new_task.*
 
 class AddTaskFragmentDialog: DialogFragment() {
 
     private var taskAddedListener: TaskAddedListener? = null
-    private val repository = Repository()
-    private val prefs = TaskiePrefs
+    private val repository = Repository
 
     interface TaskAddedListener{
-        fun onTaskAdded()
+        fun onTaskAdded(task: Task)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +50,7 @@ class AddTaskFragmentDialog: DialogFragment() {
     private fun initUi(){
         context?.let {
             prioritySelector.adapter = ArrayAdapter<Priority>(it, android.R.layout.simple_spinner_dropdown_item, Priority.values())
-            val last = prefs.getInt(KEY,0)
-            prioritySelector.setSelection(last!!)
+            prioritySelector.setSelection(2)
         }
     }
 
@@ -74,32 +67,18 @@ class AddTaskFragmentDialog: DialogFragment() {
         val title = newTaskTitleInput.text.toString()
         val description = newTaskDescriptionInput.text.toString()
         val priority = prioritySelector.selectedItem as Priority
-        repository.addTask(
-            Task(
-                title = title,
-                description = description,
-                priority = priority.getIntKey()
-            )
-
-        )
-
-        saveLastSelection(priority)
+        val task = repository.save(title, description, priority)
 
         clearUi()
 
-        taskAddedListener?.onTaskAdded()
+        taskAddedListener?.onTaskAdded(task)
         dismiss()
-    }
-
-    private fun saveLastSelection(priority: Priority) {
-        prefs.store(KEY,priority.getIntKey())
     }
 
     private fun clearUi() {
         newTaskTitleInput.text.clear()
         newTaskDescriptionInput.text.clear()
-        val last = prefs.getInt(KEY,0)
-        prioritySelector.setSelection(last!!)
+        prioritySelector.setSelection(0)
     }
 
     private fun isInputEmpty(): Boolean = isEmpty(newTaskTitleInput.text) || isEmpty(newTaskDescriptionInput.text)
